@@ -96,5 +96,71 @@ router.post('/login', [
 });
 
 //delete
+router.delete('/delete/:id',fetchuser , async(req,res) =>{
+ 
+  try{
+
+  let user = await  User.findById(req.params.id);
+  if (!user) {
+    return res.status(400).send("not found")}
+  
+  
+  user =  await User.findByIdAndDelete(req.params.id)
+  res.json({"sucess" : "deleted" ,user:user});
+}
+  catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
+//getusere
+router.post('/getuser', fetchuser,  async (req, res) => {
+
+  try {
+    userId = req.user.id;
+    const user = await User.findById(userId).select("-password")
+    res.send(user)
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
+router.post('/getuser', fetchuser,  async (req, res) => {
+
+  try {
+    userId = req.user.id;
+    const user = await User.findById(userId).select("-password")
+    res.send(user)
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+})
+//update
+
+router.put('/update/:id', fetchuser, async (req, res) => {
+  const { name,email,secPass } = req.body;
+  try {
+      // Create a user object
+      const newUser = {};
+      if (name) { newUser.name = name };
+      if (email) { newUser.email = email };
+      if (secPass) { newUser.secPass = secPass };
+
+      // Find the note to be updated and update it
+      let user = await User.findById(req.params.id);
+      if (!user) { return res.status(404).send("Not Found") }
+
+     
+      user = await User.findByIdAndUpdate(req.params.id, { $set: newUser }, { new: true })
+      res.json({ user });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Internal Server Error");
+  }
+})
+
 
 module.exports = router
