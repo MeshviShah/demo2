@@ -161,6 +161,14 @@ router.put('/update/:id', fetchuser, async (req, res) => {
       res.status(500).send("Internal Server Error");
   }
 })
-
+router.post('/getalluser',   async (req, res) => {
+   
+  User.find()
+  .then(result =>{
+    res.status(200).json({
+      userData:result
+    });
+  })
+  
 
 module.exports = router
